@@ -66,38 +66,8 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
+
     va_end(args);
-
-    pid_t pid = fork();
-    if (pid == -1) {
-        perror("fork failed");
-        return false;
-    }
-    else if (pid == 0) {
-        // Child process
-        execv(command[0], command);
-        // If execv fails
-        perror("execv failed");
-        exit(EXIT_FAILURE);
-    }
-    
-    // Parent process waits for child to complete
-    int status;
-    if (waitpid(pid, &status, 0) == -1) {
-        perror("waitpid failed");
-        return false;
-    }
-    
-    // Check if the child exited successfully
-    if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-        return true;
-    } else {
-        return false;
-    }
-    
-    
-
-    
     
 
     
@@ -130,40 +100,24 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *   redirect standard out to a file specified by outputfile.
  *   The rest of the behaviour is same as do_exec()
  *
-*/  
-    va_end(args);
-    pid_t pid = fork();
-    if (pid == -1) {
-        perror("fork failed");
+*/  int pid;
+    pid = fork();
+    
+    if(pid == -1){
         return false;
-    }
-    else if (pid == 0) {
-        // Child process
-        int fd = open(outputfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        if (fd == -1) {
-            perror("open failed");
-            exit(EXIT_FAILURE);
+    }  
+    else{
+        if(execv(command[0],command) == -1){
+            return false;
         }
         
-        // Redirect stdout to file
-        if (dup2(fd, STDOUT_FILENO) == -1) {
-            perror("dup2 failed");
-            exit(EXIT_FAILURE);
-        }
-        close(fd);
-        
-        execv(command[0], command);
-        perror("execv failed");
-        exit(EXIT_FAILURE);
     }
     
-    // Parent process waits for child to complete
-    int status;
-    if (waitpid(pid, &status, 0) == -1) {
-        perror("waitpid failed");
-        return false;
-    }
-    
-    return WIFEXITED(status) && WEXITSTATUS(status) == 0;
+    wait(NULL);
+    return true;
 
+
+    va_end(args);
+
+    return true;
 }
