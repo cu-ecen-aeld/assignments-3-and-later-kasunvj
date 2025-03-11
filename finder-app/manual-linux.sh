@@ -66,7 +66,7 @@ mkdir -p var/log
 cd "$OUTDIR"
 if [ ! -d "${OUTDIR}/busybox" ]
 then
-git clone git://busybox.net/busybox.git
+git clone --depth 1 git://busybox.net/busybox.git
     cd busybox
     git checkout ${BUSYBOX_VERSION}
     # TODO:  Configure busybox
@@ -75,6 +75,8 @@ git clone git://busybox.net/busybox.git
     # TODO: Done
 else
     cd busybox
+    make distclean
+    make defconfig
 fi
 
 # TODO: Make and install busybox
@@ -131,11 +133,13 @@ make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-
 
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
+echo "--------------------------------------XXXX------------------------------------"
 cp autorun-qemu.sh ${OUTDIR}/rootfs/home/
 cp autorun-qemu.sh ${OUTDIR}/rootfs/home/
 cp finder-test.sh ${OUTDIR}/rootfs/home/
 cp -r conf/ ${OUTDIR}/rootfs/home/
 cp writer ${OUTDIR}/rootfs/home/
+cp writer.sh ${OUTDIR}/rootfs/home/
 cp finder.sh ${OUTDIR}/rootfs/home/
 
 
