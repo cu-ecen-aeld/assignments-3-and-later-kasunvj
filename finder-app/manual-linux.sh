@@ -68,7 +68,7 @@ if [ ! -d "${OUTDIR}/busybox" ]
 then
 git clone --depth 1 git://busybox.net/busybox.git
     cd busybox
-    git fetch
+    git fetch origin
     git checkout ${BUSYBOX_VERSION}
     # TODO:  Configure busybox
     make distclean
