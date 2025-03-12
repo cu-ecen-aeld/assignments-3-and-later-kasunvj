@@ -66,10 +66,10 @@ mkdir -p var/log
 cd "$OUTDIR"
 if [ ! -d "${OUTDIR}/busybox" ]
 then
-git clone --depth 1 git://busybox.net/busybox.git
+git clone git://busybox.net/busybox.git
     cd busybox
-    git fetch origin
-    git checkout ${BUSYBOX_VERSION}
+    git fetch --tags
+    git checkout ${BUSYBOX_VERSION} || git checkout master
     # TODO:  Configure busybox
     make distclean
     make defconfig
