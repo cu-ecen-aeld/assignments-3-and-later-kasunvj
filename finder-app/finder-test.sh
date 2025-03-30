@@ -74,3 +74,5 @@ else
 	echo "failed: expected  ${MATCHSTR} in ${OUTPUTSTRING} but instead found"
 	exit 1
 fi
+
+scp -P 10022 root@localhost:/tmp/assignment4-result.txt /home/vimukthi/Documents/GitHub/coursera/assignments-3-and-later-kasunvj/assignments
